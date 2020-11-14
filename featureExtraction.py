@@ -36,7 +36,7 @@ def getControlFeatures():
 
 def getParkinsonFeatures():
     parkinson_data = []
-    parkinson = getFiles(control_path)
+    parkinson = getFiles(parkinson_path)
     for i in parkinson:
         parkinson_data.append(extractFeatures(i))
     return parkinson_data

@@ -1,24 +1,26 @@
 import pandas as pd
 import numpy as np
-import tensorflow as tf   
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior() 
 from IPython.display import display
 from IPython.display import Image
-
+import featureExtraction as fe
+from sklearn.preprocessing import OneHotEncoder
 
 def MLP(data, classes, test_data, test_classes):
     tf.reset_default_graph()
     
     # One placeholder for all features (as a matrix) and another for the prediction
-    x = tf.placeholder(tf.float32, [None, 784])
-    y = tf.placeholder(tf.float32, [None, 10])
+    x = tf.placeholder(tf.float32, [None, 7])
+    y = tf.placeholder(tf.float32, [None, 2])
     
     # First layer: one matrix of weights (on top of the known features) and a vector of biases
-    w1 = tf.Variable(tf.zeros([784, 100]), name="layer1_weights")
-    b1 = tf.Variable(tf.zeros([100]), name="layer1_biases")
+    w1 = tf.Variable(tf.zeros([7, 4]), name="layer1_weights")
+    b1 = tf.Variable(tf.zeros([4]), name="layer1_biases")
     
     # Second layer: one matrix of weights (on top of the abstract features) and a vector of biases
-    w2 = tf.Variable(tf.zeros([100, 10]), name="layer2_weights")
-    b2 = tf.Variable(tf.zeros([10]), name="layer2_biases")
+    w2 = tf.Variable(tf.zeros([4, 2]), name="layer2_weights")
+    b2 = tf.Variable(tf.zeros([2]), name="layer2_biases")
     
     linear_model = tf.matmul(x, w1) + b1
     # First layer and probability prediction
@@ -55,3 +57,19 @@ def MLP(data, classes, test_data, test_classes):
         parameters = sess.run([w1, b1, w2, b2])
         test_predictions = sess.run(class_pred, feed_dict={x: test_data})
     return parameters, test_predictions
+
+data = fe.getControlFeatures()
+
+
+park = fe.getParkinsonFeatures()
+
+
+all_data = np.concatenate((data,park),axis= 0)
+'''
+ohe = OneHotEncoder()
+
+n_classes = np.unique(y_mnist_tr).shape[0]
+y_mnist_tr_oh = np.eye(n_classes)[y_mnist_tr]
+y_mnist_ts_oh = np.eye(n_classes)[y_mnist_ts]
+'''
+print(all_data.shape)
