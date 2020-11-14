@@ -25,7 +25,7 @@ for file in data:
             f.write(line)
         f.close()
 print(cont)
-'''
+
 data = os.listdir("Data/parkinson")
 
 
@@ -39,4 +39,4 @@ for file in data:
             #print(line)
             f.write(line)
         f.close()
-'''
+
