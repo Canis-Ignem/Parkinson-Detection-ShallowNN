@@ -40,3 +40,11 @@ def getParkinsonFeatures():
     for i in parkinson:
         parkinson_data.append(extractFeatures(i))
     return parkinson_data
+
+def getClasses():
+    classes = []
+    for i in range(15):
+        classes.append(0)
+    for i in range(62):
+        classes.append(1)
+    return np.array(classes)

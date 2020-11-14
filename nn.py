@@ -1,11 +1,13 @@
 import pandas as pd
 import numpy as np
 import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior() 
+tf.disable_v2_behavior()
 from IPython.display import display
 from IPython.display import Image
 import featureExtraction as fe
 from sklearn.preprocessing import OneHotEncoder
+
+
 
 def MLP(data, classes, test_data, test_classes):
     tf.reset_default_graph()
@@ -65,11 +67,25 @@ park = fe.getParkinsonFeatures()
 
 
 all_data = np.concatenate((data,park),axis= 0)
-'''
+target = fe.getClasses()
+
+train_data = all_data[0::2]
+train_target = target[0::2]
+
+test_data = all_data[1::2]
+test_target = target[1::2]
+
+
 ohe = OneHotEncoder()
 
-n_classes = np.unique(y_mnist_tr).shape[0]
-y_mnist_tr_oh = np.eye(n_classes)[y_mnist_tr]
-y_mnist_ts_oh = np.eye(n_classes)[y_mnist_ts]
+n_classes = np.unique(train_target).shape[0]
+train_target = np.eye(n_classes)[train_target]
+test_target = np.eye(n_classes)[test_target]
+
+params, test_preds = MLP(train_data, train_target, test_data, test_target)
 '''
-print(all_data.shape)
+print(train_data.shape)
+print(train_target.shape)
+print(test_data.shape)
+print(test_target.shape)
+'''
