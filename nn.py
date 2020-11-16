@@ -65,7 +65,7 @@ def MLP(data, classes, test_data, test_classes):
 def custom_MLP(data, classes, test_data, test_classes, layer_sizes):
     tf.reset_default_graph()
 
-    x = tf.placeholder(tf.float32, [None, 5])
+    x = tf.placeholder(tf.float32, [None, 10])
     y = tf.placeholder(tf.float32, [None, 2])
     # At the end of the loop, this variable should contain all the weight variables
     weights = []
@@ -76,7 +76,7 @@ def custom_MLP(data, classes, test_data, test_classes, layer_sizes):
     
     # We advise the usage of an auxiliary variable that contains the number of neurons in the last layer
     # It should initialized as the number of features in the data
-    last_layer = 5
+    last_layer = 10
     #tf.matmul(x, w1) + b1
     # For giving names to the variables, you can use something like name="layer" + str(len(layers)) + "_{biases|weights}"
     for layer, neurons in enumerate(layer_sizes):  # For each layer specified in the list
@@ -99,16 +99,17 @@ def custom_MLP(data, classes, test_data, test_classes, layer_sizes):
     #loss = bce(y,prediction)
     class_pred = tf.argmax(prediction, axis=1)
 
-    #optimizer = tf.train.AdamOptimizer(learning_rate=.00001).minimize(loss)
-    optimizer = tf.train.AdamOptimizer(learning_rate=.0001).minimize(loss)
+    optimizer = tf.train.AdamOptimizer(learning_rate=.00005).minimize(loss)
+    #optimizer = tf.keras.optimizers.SGD(learning_rate=0.00001, momentum=0.7).minimize(loss, biases[len(biases)-1] )
+
 
     init = tf.global_variables_initializer()
 
-    training_epochs = 24000
+    training_epochs = 30000
     train_n_samples = data.shape[0]
     display_step = 2000
 
-    mini_batch_size = 5
+    mini_batch_size = 100
     n_batch = train_n_samples // mini_batch_size + (train_n_samples % mini_batch_size != 0)
     
     with tf.Session() as sess:
@@ -133,13 +134,6 @@ park = fe.getParkinsonFeatures()
 all_data = np.concatenate((data,park),axis= 0)
 target = fe.getClasses()
 
-'''
-train_data = all_data[0::2]
-train_target = target[0::2]
-
-test_data = all_data[1::2]
-test_target = target[1::2]
-'''
 
 train_data, test_data, train_target, test_target = train_test_split(all_data,target, test_size= 0.2, random_state=30 )
 
@@ -155,14 +149,9 @@ print(train_target.shape)
 print(test_data.shape)
 print(test_target.shape)
 '''
-#print(test_preds)
-#print(test_target)
-#print(confusion_matrix(test_preds,test_target[:][1]))
-
-#print(train_data[:,3])
 
 #params, test_preds = MLP(train_data, train_target, test_data, test_target)
-layers = np.array([3])
+layers = np.array([5])
 params, test_preds, _  = custom_MLP(train_data, train_target, test_data, test_target, layers)
 #print(test_preds)
 

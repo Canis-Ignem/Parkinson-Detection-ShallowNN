@@ -20,15 +20,16 @@ def getFiles(path):
 def extractFeatures(df):
     features = []
     
-    
     features.append(np.var( df.values[:,0]))
     features.append(np.var( df.values[:,1]))
     features.append(np.var( df.values[:,2]))
     features.append(np.var( df.values[:,3]))
     features.append(np.var( df.values[:,4]))
-    #print("AAAAAAAAA")
-    #print(len(df))
-    #print(len(features))
+    features.append(np.argmax( df.values[:,0]) - np.argmin( df.values[:,0]))
+    features.append(np.argmax( df.values[:,1]) - np.argmin( df.values[:,1]))
+    features.append(np.argmax( df.values[:,2]) - np.argmin( df.values[:,2]))
+    features.append(np.argmax( df.values[:,3]) - np.argmin( df.values[:,3]))
+    features.append(np.argmax( df.values[:,4]) - np.argmin( df.values[:,4]))
     return features
     
 
@@ -36,7 +37,7 @@ def getControlFeatures():
     control_data = []
     control = getFiles(control_path)
     for i in control:
-        new_df = np.array_split(i,40)
+        new_df = np.array_split(i,35)
         for j in new_df:
             control_data.append(extractFeatures(j))
     return control_data
@@ -45,7 +46,7 @@ def getParkinsonFeatures():
     parkinson_data = []
     parkinson = getFiles(parkinson_path)
     for i in parkinson:
-        new_df = np.array_split(i,7)
+        new_df = np.array_split(i,8)
         for j in new_df:
             parkinson_data.append(extractFeatures(j))
     return parkinson_data
