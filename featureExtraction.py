@@ -30,6 +30,7 @@ def extractFeatures(df):
     features.append(np.argmax( df.values[:,2]) - np.argmin( df.values[:,2]))
     features.append(np.argmax( df.values[:,3]) - np.argmin( df.values[:,3]))
     features.append(np.argmax( df.values[:,4]) - np.argmin( df.values[:,4]))
+    features.append(df.values[0][6])
     return features
     
 
@@ -37,18 +38,22 @@ def getControlFeatures():
     control_data = []
     control = getFiles(control_path)
     for i in control:
-        new_df = np.array_split(i,35)
-        for j in new_df:
-            control_data.append(extractFeatures(j))
+        new_df = splitByTest(i)
+        for k in range(new_df.shape[0]):
+            last_df = np.array_split(i,35)
+            for j in last_df:
+                control_data.append(extractFeatures(j))
     return control_data
 
 def getParkinsonFeatures():
     parkinson_data = []
     parkinson = getFiles(parkinson_path)
     for i in parkinson:
-        new_df = np.array_split(i,8)
-        for j in new_df:
-            parkinson_data.append(extractFeatures(j))
+        new_df = splitByTest(i)
+        for k in range(new_df.shape[0]):
+            last_df = np.array_split(i,15)
+            for j in last_df:
+                parkinson_data.append(extractFeatures(j))
     return parkinson_data
 
 def getClasses():
@@ -59,14 +64,32 @@ def getClasses():
         classes.append(1)
     #res = np.array(classes)
     return np.array(classes)
+
+def splitByTest(df):
+    data = []
+    test = df.values[0][6]
+    split = []
+    cont = 0
+    for i in range(df.shape[0]):
+        if df.values[i][6] == test:
+            split.append(df.values[i])
+        else:
+            aux = pd.DataFrame(split)
+            data.append(aux)
+            split = []
+            test = df.values[i][6]
+            split.append(df.values[i])
+    data.append(split)
+    return pd.DataFrame(data)
+
+#control = getFiles(control_path)
+#a = splitByTest(control[0])
+#print(a)
+
+#a = getControlFeatures()
+
+#print(np.shape(a))
 '''
-a = getClasses()
-print(a)
-
-a = getControlFeatures()
-
-print(np.shape(a))
-
 df = getFiles(parkinson_path)
 a = extractFeatures(df[0])
 print(np.shape(a))
