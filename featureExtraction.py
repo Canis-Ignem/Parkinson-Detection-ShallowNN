@@ -6,6 +6,7 @@ control_path = "Data/control"
 parkinson_path = "Data/parkinson"
 
 
+
 def getFiles(path):
     all_files = glob.glob(path + "/*.txt")
     data = []
@@ -40,10 +41,10 @@ def getControlFeatures():
     for i in control:
         new_df = splitByTest(i)
         for k in range(new_df.shape[0]):
-            last_df = np.array_split(i,35)
+            last_df = np.array_split(i,750)
             for j in last_df:
                 control_data.append(extractFeatures(j))
-    return control_data
+    return pd.DataFrame(control_data)
 
 def getParkinsonFeatures():
     parkinson_data = []
@@ -51,19 +52,20 @@ def getParkinsonFeatures():
     for i in parkinson:
         new_df = splitByTest(i)
         for k in range(new_df.shape[0]):
-            last_df = np.array_split(i,15)
+            last_df = np.array_split(i,400)
             for j in last_df:
                 parkinson_data.append(extractFeatures(j))
-    return parkinson_data
+    return pd.DataFrame(parkinson_data)
 
-def getClasses():
+def getClasses(control, parkinson):
     classes = []
-    for i in range(np.shape(getControlFeatures())[0]):
+    for i in range(control.shape[0]):
         classes.append(0)
-    for i in range(np.shape(getParkinsonFeatures())[0]):
+    for i in range(parkinson.shape[0]):
         classes.append(1)
-    #res = np.array(classes)
-    return np.array(classes)
+    res = np.array(classes)
+
+    return res
 
 def splitByTest(df):
     data = []
@@ -82,19 +84,3 @@ def splitByTest(df):
     data.append(split)
     return pd.DataFrame(data)
 
-#control = getFiles(control_path)
-#a = splitByTest(control[0])
-#print(a)
-
-#a = getControlFeatures()
-
-#print(np.shape(a))
-'''
-df = getFiles(parkinson_path)
-a = extractFeatures(df[0])
-print(np.shape(a))
-
-new_df = np.array_split(df[0],100)
-
-print(new_df[0].values[:,1])
-'''
