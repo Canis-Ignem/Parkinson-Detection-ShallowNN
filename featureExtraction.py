@@ -21,17 +21,17 @@ def getFiles(path):
 def extractFeatures(df):
     features = []
     
-    features.append(np.var( df.values[:,0]))
-    features.append(np.var( df.values[:,1]))
-    features.append(np.var( df.values[:,2]))
-    features.append(np.var( df.values[:,3]))
-    features.append(np.var( df.values[:,4]))
+    #features.append(np.var( df.values[:,0]))
+    #features.append(np.var( df.values[:,1]))
+    #features.append(np.var( df.values[:,2]))
+    #features.append(np.var( df.values[:,3]))
+    #features.append(np.var( df.values[:,4]))
     features.append(np.argmax( df.values[:,0]) - np.argmin( df.values[:,0]))
     features.append(np.argmax( df.values[:,1]) - np.argmin( df.values[:,1]))
     features.append(np.argmax( df.values[:,2]) - np.argmin( df.values[:,2]))
     features.append(np.argmax( df.values[:,3]) - np.argmin( df.values[:,3]))
     features.append(np.argmax( df.values[:,4]) - np.argmin( df.values[:,4]))
-    features.append(df.values[0][6])
+    #features.append(df.values[0][6])
     return features
     
 
@@ -41,7 +41,7 @@ def getControlFeatures():
     for i in control:
         new_df = splitByTest(i)
         for k in range(new_df.shape[0]):
-            last_df = np.array_split(i,750)
+            last_df = np.array_split(i,40)
             for j in last_df:
                 control_data.append(extractFeatures(j))
     return pd.DataFrame(control_data)
@@ -52,7 +52,7 @@ def getParkinsonFeatures():
     for i in parkinson:
         new_df = splitByTest(i)
         for k in range(new_df.shape[0]):
-            last_df = np.array_split(i,400)
+            last_df = np.array_split(i,10)
             for j in last_df:
                 parkinson_data.append(extractFeatures(j))
     return pd.DataFrame(parkinson_data)
